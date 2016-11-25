@@ -10,9 +10,9 @@ typedef struct Stack
     int stacksize;
 }stack;
 
-void debug(stack *s)
+void debug(char s)
 {
-        printf("%p", s->top);
+        printf("%c", s);
 
 }
 
@@ -20,7 +20,6 @@ void InitStack(stack *s) //构造栈
 {
     s->base=(char *)malloc(STACK_INIT_SIZE*sizeof(char));
     s->top=s->base;
-    debug(s);
     s->stacksize=STACK_INIT_SIZE;
 }
 
@@ -32,13 +31,14 @@ void Push(stack *s,char e) //压入元素
         s->top = s->base+s->stacksize;
         s->stacksize += STACK_INCREMENT;
     }
+
     *(s->top) = e;
     s->top++;
 
 }
 void Pop(stack *s, char *e) //取出元素
 {
-    e = s->top--;
+    *e = *--(s->top);
 }
 
 int StackEmpty(stack *s) //栈是否为空
@@ -108,7 +108,7 @@ void translate(stack *s, char origin[])
     len = strlen(origin);
     for(i = len-1; i >= 0; i--)
     {
-        if(origin[i] == '(')
+        if(origin[i] == '(')//处理括号内的内容
         {
             while(1)
             {
@@ -140,31 +140,24 @@ void translate(stack *s, char origin[])
     }
 }
 
-int main()
+void print_stack(stack *s)
 {
-    stack s;
-    InitStack(&s);
     linkqueue q;
     InitQueue(&q);
-    char origin[100]="\0";
     char e;
-    printf("请输入你想要解释的魔王语言：\n");
-    gets(origin);
 
-    translate(&s, origin);
-
-    while(!StackEmpty(&s))
+    while(!StackEmpty(s))
     {
         printf("解释后的语言为：\n");
 
-        while(!StackEmpty(&s)) //依次出栈输出处理后的元素
+        while(!StackEmpty(s)) //依次出栈输出处理后的元素
         {
-            Pop(&s, &e);
+            Pop(s, &e);
             EnQueue(&q, e);//元素进队是为了输出对应汉字
             printf("%c",e);
         }
 
-        printf("\n");
+        printf("\n与汉字建立对应关系后的语言为：\n");
 
         while(!QueueEmpty(q)) //输出对应汉字
         {
@@ -209,5 +202,17 @@ int main()
         }
         printf("\n");
     }
+}
+
+int main()
+{
+    stack s;
+    InitStack(&s);
+    char origin[100]="\0";
+
+    printf("请输入你想要解释的魔王语言：\n");
+    gets(origin);
+    translate(&s, origin);
+    print_stack(&s);
     return 0;
 }
