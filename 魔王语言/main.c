@@ -10,22 +10,16 @@ typedef struct Stack
     int stacksize;
 }stack;
 
-void debug(char s)
+void InitStack(stack *s) //初始化栈
 {
-        printf("%c", s);
-
-}
-
-void InitStack(stack *s) //构造栈
-{
-    s->base=(char *)malloc(STACK_INIT_SIZE*sizeof(char));
-    s->top=s->base;
-    s->stacksize=STACK_INIT_SIZE;
+    s->base = (char *)malloc(STACK_INIT_SIZE*sizeof(char));
+    s->top = s->base;
+    s->stacksize = STACK_INIT_SIZE;
 }
 
 void Push(stack *s,char e) //压入元素
 {
-    if(s->top-s->base>=STACK_INIT_SIZE)
+    if(s->top-s->base >= STACK_INIT_SIZE)
     {
         s->base = (char *)realloc(s->base,(s->stacksize+STACK_INCREMENT)*sizeof(char));
         s->top = s->base+s->stacksize;
@@ -61,7 +55,7 @@ typedef struct LinkQueue
     queue *rear;
 }linkqueue;
 
-void InitQueue(linkqueue *q) //构造队
+void InitQueue(linkqueue *q) //初始化队
 {
     q->front = q->rear = (queue*)malloc(sizeof(queue));
     q->front->next=NULL;
@@ -96,14 +90,27 @@ int QueueEmpty(linkqueue q) //队是否为空
         return 0;
 }
 
-void translate(stack *s, char origin[])
+void advance_push(stack *s, char e)//处理AB字符
 {
-    int i, j, len;
+    int i;
+    char A[]="sae";
+    char B[]="tsaedsae";
+    if(e == 'A')
+        for(i = strlen(A); i > 0; i--)
+            Push(s, A[i-1]);
+    else if(e == 'B')
+        for(i = strlen(B); i > 0; i--)
+            Push(s, B[i-1]);
+    else
+        Push(s, e);
+}
+
+void translate(stack *s, char origin[])//处理括号
+{
+    int i, len;
     linkqueue q;
     InitQueue(&q);
     char repeat, temp;
-    char A[]="sae";
-    char B[]="tsaedsae";
 
     len = strlen(origin);
     for(i = len-1; i >= 0; i--)
@@ -119,24 +126,17 @@ void translate(stack *s, char origin[])
             }
 
             DeQueue(&q, &repeat);
-
             while(!QueueEmpty(q))
             {
-                Push(s, repeat);
+                advance_push(s, repeat);
                 DeQueue(&q, &temp);
-                Push(s, temp);
+                advance_push(s, temp);
             }
-            Push(s, repeat);
+            advance_push(s, repeat);
 
         }
-        else if(origin[i] == 'A')
-            for(j = strlen(A); j > 0; j--)
-                Push(s, A[j-1]);
-        else if(origin[i] == 'B')
-            for(j = strlen(B); j > 0; j--)
-                Push(s, B[j-1]);
         else
-            Push(s, origin[i]);
+            advance_push(s, origin[i]);
     }
 }
 
@@ -146,7 +146,7 @@ void print_stack(stack *s)
     InitQueue(&q);
     char e;
 
-    while(!StackEmpty(s))
+    if(!StackEmpty(s))
     {
         printf("解释后的语言为：\n");
 
@@ -157,7 +157,7 @@ void print_stack(stack *s)
             printf("%c",e);
         }
 
-        printf("\n与汉字建立对应关系后的语言为：\n");
+        printf("\n进一步解释为汉字：\n");
 
         while(!QueueEmpty(q)) //输出对应汉字
         {
