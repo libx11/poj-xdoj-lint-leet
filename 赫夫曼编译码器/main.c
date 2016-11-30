@@ -29,32 +29,32 @@ void tips()   //操作选择界面
     printf(" |---------------------------------------------------|\n");
 }
 
-
-//初始化函数，输入n个字符及其对应的权值，根据权值建立哈夫曼树，并将其存于文件hfmtree中
-void Init()
+//从HT[1]到HT[j]中选择parent为0，weight最小的两个结点，用x和y返回其序号
+void select(int j,int *x,int *y)
 {
-    FILE *fp;
-    int i,n,w[52];    //数组存放字符的权值
-    char character[52];    //存放n个字符
-    printf("\n输入字符个数 n:");
-    scanf("%d",&n);        //输入字符集大小
-    printf("输入%d个字符及其对应的权值:\n",n);
-    for (i=0; i<n; i++)
-    {
-        scanf(" %c",&character[i]);
-        scanf("%d",&w[i]);           //输入n个字符和对应的权值
-    }
-    HuffmanCoding(character,w,n);    //建立赫夫曼树
+    int i;
+//查找weight最小的结点
+    for (i=1; i<=j; i++)
+        if (HT[i].parent==0)
+        {
+            *x=i;
+            break;
+        }
+    for (; i<=j; i++)
+        if ((HT[i].parent==0)&&(HT[i].weight<HT[*x].weight))
+            *x=i;
+    HT[*x].parent=1;
+//查找weight次小的结点
+    for (i=1; i<=j; i++)
+        if (HT[i].parent==0)
+        {
+            *y=i;
+            break;
+        }
+    for (; i<=j; i++)
+        if ((HT[i].parent==0)&&(i!=*x)&&(HT[i].weight<HT[*y].weight))
+            *y=i;
 
-    if((fp=fopen("hfmtree.txt","w"))==NULL)
-        printf("Open file hfmtree.txt error!\n");
-    for (i=1; i<=2*n-1; i++)
-    {
-        if(fwrite(&HT[i],sizeof(HTNode),1,fp)!=1)   //将建立的赫夫曼树存入文件hfmtree.txt中
-            printf("File write error!\n");
-    }
-    printf("\n赫夫曼树建立成功，并已存于文件hfmtree.txt中\n");
-    fclose(fp);
 }
 
 //建立赫夫曼树的算法
@@ -93,35 +93,101 @@ void HuffmanCoding(char *character,int *w,int n)
 
 }
 
-
-//从HT[1]到HT[j]中选择parent为0，weight最小的两个结点，用x和y返回其序号
-void select(int j,int *x,int *y)
+void Convert_tree(unsigned char T[100][100],int s,int *i,int j)//将文件中的赫夫曼树转换成凹入表形式的赫夫曼树打印出来
 {
-    int i;
-//查找weight最小的结点
-    for (i=1; i<=j; i++)
-        if (HT[i].parent==0)
-        {
-            *x=i;
-            break;
-        }
-    for (; i<=j; i++)
-        if ((HT[i].parent==0)&&(HT[i].weight<HT[*x].weight))
-            *x=i;
-    HT[*x].parent=1;
-//查找weight次小的结点
-    for (i=1; i<=j; i++)
-        if (HT[i].parent==0)
-        {
-            *y=i;
-            break;
-        }
-    for (; i<=j; i++)
-        if ((HT[i].parent==0)&&(i!=*x)&&(HT[i].weight<HT[*y].weight))
-            *y=i;
+    int k,l;
+    if(HT[j].rchild)//最上边一行输出的是最右的节点，故采用中序遍历，这里是递归遍历右节点
+        Convert_tree(T,s+1,i,HT[j].rchild);
+
+    l=++(*i);       //读取节点数据并存入数组
+    for(k=0; k<s; k++)
+        T[l][k]=' ';
+    T[l][k]=HT[j].weight;
+    if(HT[j].rchild)//有子节点就在后边输出一个字符以便观察
+        T[l][++k]='<';
+    else
+        T[l][++k]=' ';
+    T[l][++k]=0;
+
+
+    if(HT[j].lchild)//递归遍历左节点
+        Convert_tree(T,s+1,i,HT[j].lchild);
 
 }
 
+//从文件hfmtree.txt中读入赫夫曼树，返回叶子节点数
+int Read_tree()
+{
+    FILE *fp;
+    int i,n;
+    HT=(HuffmanTree)malloc(sizeof(HTNode));
+    if((fp=fopen("hfmtree.txt","r"))==NULL)
+        printf("Open file hfmtree.txt error!\n");
+    for (i=1; !feof(fp); i++)
+    {
+        HT=(HuffmanTree)realloc(HT,(i+1)*sizeof(HTNode));   //增加空间
+        fread(&HT[i],sizeof(HTNode),1,fp);   //读入一个节点信息
+    }
+    fclose(fp);
+    n=(i-1)/2;
+    return n;
+}
+
+//译码时根据01字符串寻找相应叶子节点的递归算法
+void find(char *code,char *text,int i,int m)
+{
+
+    if(*code!='\0')    //若译码未结束
+    {
+        code++;
+        if(HT[i].lchild==0&&HT[i].rchild==0)   //若找到叶子节点
+        {
+
+            *text=HT[i].ch;   //将叶子节点的字符存入text中
+
+            text++;
+            if((*code=='0'))
+                find(code,text,HT[m].lchild,m);    //从根节点的左子树找
+            else
+                find(code,text,HT[m].rchild,m);    //从根节点的右子树找
+        }
+        else   //如果不是叶子节点
+            if(*code=='0')
+                find(code,text,HT[i].lchild,m);   //从该节点的左子树去找
+            else
+                find(code,text,HT[i].rchild,m);   //从该节点的右子树去找
+    }
+    else
+        *text='\0'; //译码结束
+
+}
+
+//初始化函数，输入n个字符及其对应的权值，根据权值建立哈夫曼树，并将其存于文件hfmtree中
+void Init()
+{
+    FILE *fp;
+    int i,n,w[52];    //数组存放字符的权值
+    char character[52];    //存放n个字符
+    printf("\n输入字符个数 n:\n");
+    scanf("%d",&n);        //输入字符集大小
+    printf("输入%d个字符及其对应的权值:\n",n);
+    for (i=0; i<n; i++)
+    {
+        scanf(" %c",&character[i]);
+        scanf("%d",&w[i]);           //输入n个字符和对应的权值
+    }
+    HuffmanCoding(character,w,n);    //建立赫夫曼树
+
+    if((fp=fopen("hfmtree.txt","w"))==NULL)
+        printf("Open file hfmtree.txt error!\n");
+    for (i=1; i<=2*n-1; i++)
+    {
+        if(fwrite(&HT[i],sizeof(HTNode),1,fp)!=1)   //将建立的赫夫曼树存入文件hfmtree.txt中
+            printf("File write error!\n");
+    }
+    printf("\n赫夫曼树建立成功，并已存于文件hfmtree.txt中\n");
+    fclose(fp);
+}
 
 //对文件tobetrans中的正文进行编码，然后将结果存入文件codefile中
 void Coding()
@@ -240,34 +306,6 @@ void Print_code()
     fclose(fw);
 
 }
-void coprint(HuffmanTree start,HuffmanTree HT)   //start=ht+26这是一个递归算法
-{
-if(start!=HT)
-        {
-          FILE * TreePrint;
-          if((TreePrint=fopen("TreePrint.txt","a"))==NULL)
-             {
-              cout<<"创建文件失败"<<endl;
-              return;
-             }
-          numb++;       //number=0 该变量为已被声明为全局变量
-          coprint(HT+start->rchild,HT);             //递归先序遍历
-          cout<<setw(5*numb)<<start->weight<<endl;
-          fprintf(TreePrint,"%d\n",start->weight);
-          coprint(HT+start->lchild,HT);
-          numb--;
-          fclose(TreePrint);
-        }
-}
-void Tree_printing(HuffmanTree HT,int w)
-{
-        HuffmanTree p;
-        p=HT+w;                 //p=HT+26
-        cout<<"下面打印赫夫曼树"<<endl;
-        coprint(p,HT);             //p=HT+26
-        cout<<"打印工作结束"<<endl;
-}
-
 
 //将已在内存中的哈夫曼树显示在屏幕上，并将此字符形式的哈夫曼树写入文件treeprint中。
 void Print_tree()
@@ -289,87 +327,23 @@ void Print_tree()
         {
             if(T[i][j]==' ')
             {
-                printf(" ");
-                fputc(T[i][j],fp);
+                printf("    ");
+                fputs("    ",fp);
             }
             else
             {
                 printf("%d",T[i][j]);
-                fprintf(fp,"%d\n",T[i][j]);
+                fprintf(fp,"%d",T[i][j]);
+                printf("%c\n",T[i][++j]);
+                fprintf(fp,"%c\r\n",T[i][j]);
             }
         }
-        printf("\n");
+
     }
     fclose(fp);
     printf("\n已将该字符形式的哈夫曼树写入文件treeprint.txt中！\n\n");
 
 }
-
-//从文件hfmtree.txt中读入赫夫曼树，返回叶子节点数
-int Read_tree(HuffmanTree HT)
-{
-    FILE *fp;
-    int i,n;
-    HT=(HuffmanTree)malloc(sizeof(HTNode));
-    if((fp=fopen("hfmtree.txt","r"))==NULL)
-        printf("Open file hfmtree.txt error!\n");
-    for (i=1; !feof(fp); i++)
-    {
-        HT=(HuffmanTree)realloc(HT,(i+1)*sizeof(HTNode));   //增加空间
-        fread(&HT[i],sizeof(HTNode),1,fp);   //读入一个节点信息
-    }
-    fclose(fp);
-    n=(i-1)/2;
-    return n;
-}
-
-
-//译码时根据01字符串寻找相应叶子节点的递归算法
-void find(char *code,char *text,int i,int m)
-{
-
-    if(*code!='\0')    //若译码未结束
-    {
-        code++;
-        if(HT[i].lchild==0&&HT[i].rchild==0)   //若找到叶子节点
-        {
-
-            *text=HT[i].ch;   //将叶子节点的字符存入text中
-
-            text++;
-            if((*code=='0'))
-                find(code,text,HT[m].lchild,m);    //从根节点的左子树找
-            else
-                find(code,text,HT[m].rchild,m);    //从根节点的右子树找
-        }
-        else   //如果不是叶子节点
-            if(*code=='0')
-                find(code,text,HT[i].lchild,m);   //从该节点的左子树去找
-            else
-                find(code,text,HT[i].rchild,m);   //从该节点的右子树去找
-
-
-    }
-    else
-        *text='\0'; //译码结束
-
-}
-
-//将文件中的赫夫曼树转换成凹凸表形式的赫夫曼树打印出来
-void Convert_tree(unsigned char T[100][100],int s,int *i,int j)
-{
-    int k,l;
-    l=++(*i);
-    for(k=0; k<s; k++)
-        T[l][k]=' ';
-    T[l][k]=HT[j].weight;
-    if(HT[j].lchild)
-        Convert_tree(T,s+1,i,HT[j].lchild);
-    if(HT[j].rchild)
-        Convert_tree(T,s+1,i,HT[j].rchild);
-    T[l][++k]='\0';
-}
-
 
 int main()
 {
@@ -379,6 +353,7 @@ int main()
     {
         tips();
         scanf("%c", &select);
+        system("cls");
         switch(select)   //选择操作，根据不同的序号选择不同的操作
         {
 
@@ -410,7 +385,9 @@ int main()
             printf("Input error!\n");
         }
         getchar();
+        printf("\n按任意键返回主菜单\n");
+        getchar();
+        system("cls");
     }
     return 0;
 }
-
