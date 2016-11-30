@@ -41,7 +41,7 @@ void Init()
     printf("输入%d个字符及其对应的权值:\n",n);
     for (i=0; i<n; i++)
     {
-        scanf("%c",&character[i]);
+        scanf(" %c",&character[i]);
         scanf("%d",&w[i]);           //输入n个字符和对应的权值
     }
     HuffmanCoding(character,w,n);    //建立赫夫曼树
@@ -239,6 +239,33 @@ void Print_code()
     fclose(fp);
     fclose(fw);
 
+}
+void coprint(HuffmanTree start,HuffmanTree HT)   //start=ht+26这是一个递归算法
+{
+if(start!=HT)
+        {
+          FILE * TreePrint;
+          if((TreePrint=fopen("TreePrint.txt","a"))==NULL)
+             {
+              cout<<"创建文件失败"<<endl;
+              return;
+             }
+          numb++;       //number=0 该变量为已被声明为全局变量
+          coprint(HT+start->rchild,HT);             //递归先序遍历
+          cout<<setw(5*numb)<<start->weight<<endl;
+          fprintf(TreePrint,"%d\n",start->weight);
+          coprint(HT+start->lchild,HT);
+          numb--;
+          fclose(TreePrint);
+        }
+}
+void Tree_printing(HuffmanTree HT,int w)
+{
+        HuffmanTree p;
+        p=HT+w;                 //p=HT+26
+        cout<<"下面打印赫夫曼树"<<endl;
+        coprint(p,HT);             //p=HT+26
+        cout<<"打印工作结束"<<endl;
 }
 
 
