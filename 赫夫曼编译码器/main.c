@@ -276,7 +276,7 @@ void Decoding()
     fclose(fp);
     fclose(fw);
 
-    printf("\n已将codefile.txt文件成功译码，兵已存入textfile.txt文件！\n\n");
+    printf("\n已将codefile.txt文件成功译码，并已存入textfile.txt文件！\n\n");
 }
 
 //将文件codefi1e以紧凑格式显示在终端上,每行50个代码。同时将此字符形式的编码文件写入文件codeprint中。
