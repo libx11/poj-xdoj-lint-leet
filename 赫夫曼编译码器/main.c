@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//定义赫夫曼树结点的结构体
+//定义赫夫曼树结点的结构体       测试数据 186a64b13c22d32e103f21g15h47i57j1k5l32m20n57o63p15q1r48s51t80u23v8w18x1y16z1
 typedef struct
 {
     char ch;                //增加一个域，存放该节点的字符
@@ -58,7 +58,7 @@ void select(int j,int *x,int *y)
 }
 
 //建立赫夫曼树的算法
-void HuffmanCoding(char *character,int *w,int n)
+void HuffmanCoding(char *character,int *w)
 {
     int m,i,x,y;
     HuffmanTree p;
@@ -93,22 +93,23 @@ void HuffmanCoding(char *character,int *w,int n)
 
 }
 
-void Convert_tree(unsigned char T[100][100],int s,int *i,int j)//将文件中的赫夫曼树转换成凹入表形式的赫夫曼树打印出来
+void Convert_tree(int T[100][100],int s,int *i,int j)//将文件中的赫夫曼树转换成凹入表形式的赫夫曼树打印出来
 {
     int k,l;
+
     if(HT[j].rchild)//最上边一行输出的是最右的节点，故采用中序遍历，这里是递归遍历右节点
         Convert_tree(T,s+1,i,HT[j].rchild);
 
     l=++(*i);       //读取节点数据并存入数组
     for(k=0; k<s; k++)
         T[l][k]=' ';
-    T[l][k]=HT[j].weight;
+    T[l][k]=0;
+    T[l][++k]=HT[j].weight;
+
     if(HT[j].rchild)//有子节点就在后边输出一个字符以便观察
         T[l][++k]='<';
     else
         T[l][++k]=' ';
-    T[l][++k]=0;
-
 
     if(HT[j].lchild)//递归遍历左节点
         Convert_tree(T,s+1,i,HT[j].lchild);
@@ -128,6 +129,7 @@ int Read_tree()
         HT=(HuffmanTree)realloc(HT,(i+1)*sizeof(HTNode));   //增加空间
         fread(&HT[i],sizeof(HTNode),1,fp);   //读入一个节点信息
     }
+//    printf("%d\n",i);                     //debug
     fclose(fp);
     n=(i-1)/2;
     return n;
@@ -166,24 +168,32 @@ void find(char *code,char *text,int i,int m)
 void Init()
 {
     FILE *fp;
-    int i,n,w[52];    //数组存放字符的权值
-    char character[52];    //存放n个字符
+    int i,*w;    //数组存放字符的权值
+    char *character;
+
     printf("\n输入字符个数 n:\n");
     scanf("%d",&n);        //输入字符集大小
-    printf("输入%d个字符及其对应的权值:\n",n);
+
+    character = (char *)malloc(n*sizeof(char));  //存放n个字符
+    w = (int *)malloc(n*sizeof(int));
+
+    getchar();                               //吸收一个回车字符
+    printf("输入%d个字符及其对应的权值(不要加各种分隔符，如a的权值为1，b的权值为2，则输入a1b2)\n",n);
     for (i=0; i<n; i++)
     {
-        scanf(" %c",&character[i]);
-        scanf("%d",&w[i]);           //输入n个字符和对应的权值
+        scanf("%c",&character[i]);
+        scanf("%d",&w[i]);                 //输入n个字符和对应的权值
     }
-    HuffmanCoding(character,w,n);    //建立赫夫曼树
+    HuffmanCoding(character,w);         //建立赫夫曼树
 
-    if((fp=fopen("hfmtree.txt","w"))==NULL)
+    if((fp=fopen("hfmtree.txt","w+"))==NULL)
         printf("Open file hfmtree.txt error!\n");
-    for (i=1; i<=2*n-1; i++)
+    for (i = 1; i < 2*n; i++)
     {
+//        printf("%d\n",HT[i].rchild);               //debug
         if(fwrite(&HT[i],sizeof(HTNode),1,fp)!=1)   //将建立的赫夫曼树存入文件hfmtree.txt中
             printf("File write error!\n");
+
     }
     printf("\n赫夫曼树建立成功，并已存于文件hfmtree.txt中\n");
     fclose(fp);
@@ -310,35 +320,26 @@ void Print_code()
 //将已在内存中的哈夫曼树显示在屏幕上，并将此字符形式的哈夫曼树写入文件treeprint中。
 void Print_tree()
 {
-    unsigned char T[100][100];
-    int i,j,m=0;
+    int i,j,m=0,T[100][100];
     FILE *fp;
     if(n==0)
         n=Read_tree(HT);   //从文件hfmtree.txt中读入赫夫曼树,返回叶子结点数
-
     Convert_tree(T,0,&m,2*n-1);   //将内存中的赫夫曼树转换成凹凸表形式的树，存于数组T中
 
-    if((fp=fopen("treeprint.txt","wb+"))==NULL)
+    if((fp=fopen("treeprint.txt","w+"))==NULL)
         printf("Open file treeprint.txt error!\n");
     printf("\n打印已建好的赫夫曼树：\n");
-    for(i=1; i<=2*n-1; i++)
+    for(i = 1; i < 2*n; i++)
     {
         for (j=0; T[i][j]!=0; j++)
         {
-            if(T[i][j]==' ')
-            {
                 printf("    ");
                 fputs("    ",fp);
-            }
-            else
-            {
-                printf("%d",T[i][j]);
-                fprintf(fp,"%d",T[i][j]);
-                printf("%c\n",T[i][++j]);
-                fprintf(fp,"%c\r\n",T[i][j]);
-            }
         }
-
+        printf("%d",T[i][++j]);
+        fprintf(fp,"%d",T[i][j]);
+        printf("%c\n",T[i][++j]);
+        fprintf(fp,"%c\r\n",T[i][j]);
     }
     fclose(fp);
     printf("\n已将该字符形式的哈夫曼树写入文件treeprint.txt中！\n\n");
