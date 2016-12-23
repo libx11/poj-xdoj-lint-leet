@@ -5,9 +5,9 @@ e:\程序\内部排序比较\main.c(105): warning C4996: 'scanf': This function 
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
 e:\程序\内部排序比较\main.c(110): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
-e:\程序\内部排序比较\main.c(605): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+e:\程序\内部排序比较\main.c(607): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
-e:\程序\内部排序比较\main.c(609): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+e:\程序\内部排序比较\main.c(611): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\conio.h(452): note: 参见“getch”的声明
-  内部排序比较.vcxproj -> E:\程序\内部排序比较\Debug\内部排序比较.exe
-  内部排序比较.vcxproj -> E:\程序\内部排序比较\Debug\内部排序比较.pdb (Partial PDB)
+  内部排序比较.vcxproj -> E:\程序\内部排序比较\x64\Debug\内部排序比较.exe
+  内部排序比较.vcxproj -> E:\程序\内部排序比较\x64\Debug\内部排序比较.pdb (Partial PDB)
