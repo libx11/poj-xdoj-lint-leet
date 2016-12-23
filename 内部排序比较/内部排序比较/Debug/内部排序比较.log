@@ -1,0 +1,15 @@
+﻿  main.c
+e:\程序\内部排序比较\main.c(8): warning C4005: “max”: 宏重定义
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdlib.h(1289): note: 参见“max”的前一个定义
+e:\程序\内部排序比较\main.c(77): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
+e:\程序\内部排序比较\main.c(89): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
+e:\程序\内部排序比较\main.c(92): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
+e:\程序\内部排序比较\main.c(557): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1269): note: 参见“scanf”的声明
+e:\程序\内部排序比较\main.c(561): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\conio.h(452): note: 参见“getch”的声明
+  内部排序比较.vcxproj -> E:\程序\内部排序比较\Debug\内部排序比较.exe
+  内部排序比较.vcxproj -> E:\程序\内部排序比较\Debug\内部排序比较.pdb (Partial PDB)
