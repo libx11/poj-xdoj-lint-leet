@@ -13,6 +13,6 @@ public class input
         System.out.print("Wtf");
         int age = in.nextInt();
 
-        System.out.println("HHHHH." + name);
+        System.out.println("HHHHH." + name + age);
     }
 }
