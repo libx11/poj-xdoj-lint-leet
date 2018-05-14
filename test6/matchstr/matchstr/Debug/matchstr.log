@@ -1,0 +1,4 @@
+﻿  src.cpp
+e:\程序\test6\matchstr\matchstr\src.cpp(12): warning C4018: “<”: 有符号/无符号不匹配
+  matchstr.vcxproj -> E:\程序\test6\matchstr\Debug\matchstr.exe
+  matchstr.vcxproj -> E:\程序\test6\matchstr\Debug\matchstr.pdb (Partial PDB)
