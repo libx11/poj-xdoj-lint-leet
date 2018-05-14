@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/test1/Percolation.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test1/PercolationStats.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test1/QuickFindUF.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test1/QuickUnionUF.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test1/WeightedQuickCompressUF.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test1/WeightedQuickUnionUF.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test2/Example.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test2/Merge.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test2/Quick.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test2/Quick3way.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/Dijkstra.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/Dijkstra2.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/EuclideanGraph.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/IndexPQ.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/MultiwayIndexMinPQ.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/Paths.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/Point.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/test3/Turtle.java" charset="GBK" />
+  </component>
+</project>
