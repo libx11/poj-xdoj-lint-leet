@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1527238540 source:d:\code\lint53 revword\main.cpp
+	<iostream>
+	<stack>
+
